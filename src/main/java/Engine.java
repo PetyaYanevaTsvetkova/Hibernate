@@ -14,7 +14,7 @@ import java.util.Set;
 
 public class Engine implements Runnable {
     private final EntityManager entityManager;
-    private BufferedReader bufferedReader;
+    private final BufferedReader bufferedReader;
 
     public Engine(EntityManager entityManager) {
         this.entityManager = entityManager;
@@ -28,23 +28,37 @@ public class Engine implements Runnable {
             int exNum = Integer.parseInt(bufferedReader.readLine());
 
             switch (exNum) {
-                case 2:
+                case 1:
+                    //transform the names of all attached towns to uppercase and save them to the database:
                     townsToUpperCase();
-                case 3:
+                case 2:
+                    //checks if a given employee name is contained in the database:
                     containsEmployee();
-                case 4:
+                case 3:
+                    //get the first name of all employees who have salary over 50 000:
                     employeesWithSalaryOver50000();
-                case 5:
+                case 4:
+                    //all employees from the Research and Development department.
+                    //Order them by salary (in ascending order), then by id (in ascending order):
                     employeesFromDepartment();
-                case 6:
+                case 5:
+                    //create a new address with text "Vitoshka 15".
+                    //Set that address to an employee with a last name:
                     addingNewAddressUpdatingEmployee();
-                case 7:
+                case 6:
+                    //all addresses, ordered by the number of employees who live there (descending):
                     addressesWithEmployeeCount();
-                case 10:
+                case 7:
+                    //increases the salaries of all employees, who are in the Engineering,
+                    //Tool Design, Marketing or Information Services departments by 12%:
                     increaseSalaries();
-                case 12:
+                case 8:
+                    //finds the max salary for each department. Filter the departments,
+                    //which max salaries are not in the range between 30000 and 70000:
                     employeesMaximumSalaries();
-                case 13:
+                case 9:
+                    //delete a town, which name is given as an input.
+                    //should delete all addresses that are in the given town:
                     removeTowns();
             }
         } catch (IOException e) {
@@ -63,14 +77,12 @@ public class Engine implements Runnable {
                 .getSingleResult();
 
         int affectedRows = removeAddressesByTownId(town.getId());
-
         entityManager.getTransaction().begin();
         entityManager.remove(town);
         entityManager.getTransaction().commit();
 
         System.out.printf("%d address in %s is deleted%n", affectedRows, townName);
     }
-
 
     private int removeAddressesByTownId(Integer id) {
         List<Address> addresses = entityManager.createQuery
@@ -198,5 +210,4 @@ public class Engine implements Runnable {
 
         entityManager.getTransaction().commit();
     }
-
 }
